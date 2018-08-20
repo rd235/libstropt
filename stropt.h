@@ -11,11 +11,11 @@
 	 stropt always returns the number of options in the input string parameters plus one.
 	 actually stropt has been designed to be called twice, the first call counts the
 	 options in order to allocate the arrays for option-tags and arguments for the second call.
-*/
+ */
 
 /* The following function lists the option tags and arguments 
 	 (without modyfying the input string).
-	 */
+ */
 #if 0
 void parse_args(char *input) {
 	int tagc = stropt(input, NULL, NULL, 0);
@@ -33,14 +33,14 @@ void parse_args(char *input) {
 	 (the value of the input string gets lost in this way).*/
 #if 0
 void parse_args(char *input) {
-  int tagc = stropt(input, NULL, NULL, 0);
-  if(tagc > 0) {
-    char *tags[tagc];
-    char *args[tagc];
-    stropt(input, tags, args, input);
-    for (int i=0; i<tagc; i++)
-      printf("%s = %s\n",tags[i], args[i]);
-  }
+	int tagc = stropt(input, NULL, NULL, 0);
+	if(tagc > 0) {
+		char *tags[tagc];
+		char *args[tagc];
+		stropt(input, tags, args, input);
+		for (int i=0; i<tagc; i++)
+			printf("%s = %s\n",tags[i], args[i]);
+	}
 }
 #endif
 
@@ -57,8 +57,8 @@ int stropt(const char *input, char **tags, char **args, char *buf);
 	 For example to disable comment management feature must be set to "=\n\'\"\\".
 
 	 the string argument sep of stroptx is the list of separators of tags (the default value is "\t;,").
-	 */
-	 
+ */
+
 int stroptx(const char *input, char *features, char *sep, int flags, char **tags, char **args, char *buf);
 
 /* flags: 
@@ -75,7 +75,12 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 
 /* rebuild an option string from the tags/args arrays.
 	 tags whose value is STROPTX_DELETED_TAG are skipped in the conversion */
-char *stropt2str(char **tags, char **args, char sep, char eq);
+/* stropt2buf uses a buffer while the output of stropt2str is dynamically allocated */
+char *stropt2buf(void *buf, size_t size, char **tags, char **args, char sep, char eq);
+
+static inline char *stropt2str(char **tags, char **args, char sep, char eq) {
+	return stropt2buf(NULL, 0, tags, args, sep, eq);
+}
 
 #define STROPTX_DELETED_TAG ((char *) -1)
 #endif

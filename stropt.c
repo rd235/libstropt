@@ -67,7 +67,7 @@ static stropt_table nextstate = {
 };
 
 static stropt_table default_action = {
-  // CHAR  SEP     END         COMM     NL       ARG     SQ  DQ ESC
+	// CHAR  SEP     END         COMM     NL       ARG     SQ  DQ ESC
 	{CHCOPY, ENDTAG, EOS|ENDTAG, ENDTAG,  ENDTAG,  NEWARG, 0, 0, 0}, //CHAR
 	{NEWTAG|CHCOPY,0,EOS,        0,       0,       0,      NEWTAG, NEWTAG, NEWTAG}, //SEP
 	{0,      0,      EOS, }, //END
@@ -93,7 +93,7 @@ static int _stropt_engine(const char *input, char *charmap, char **tags, stropt_
 {
 	int state=SEP;
 	int tagc=0;
-  char *thistag=NULL;
+	char *thistag=buf;
 	for (;state != END;input++) {
 		int this = charmap[*input];
 		//printf("%c %s %s->%s %x\n", *input, sn[this], sn[state], sn[nextstate[state][this]], action[state][this]);
@@ -103,19 +103,19 @@ static int _stropt_engine(const char *input, char *charmap, char **tags, stropt_
 				*tags=thistag;
 			}
 			if (action[state][this] & ENDTAG) {
-        *buf++=0;
-        *tags++=thistag;
+				*buf++=0;
+				*tags++=thistag;
 				*args++=NULL;
-        thistag=buf;
-      }
+				thistag=buf;
+			}
 			if (action[state][this] & ENDARG) {
-        *buf++=0;
+				*buf++=0;
 				tags++;
 				*args++=thistag;
-        thistag=buf;
+				thistag=buf;
 			}
 			if (action[state][this] & (NEWTAG | NEWARG))
-        thistag=buf;
+				thistag=buf;
 			if (action[state][this] & CHCOPY) 
 				*buf++=*input;
 			if (action[state][this] & ENDLINE) {
@@ -175,6 +175,7 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 	}
 	if (flags & STROPTX_ALLOW_MULTIPLE_SEP) {
 		action[SEP][SEP] |= NEWTAG | ENDTAG;
+		action[SEP][END] |= ENDTAG;
 	}
 	if (flags & STROPTX_NEWLINE_TAGS) {
 		action[CHAR][NL] |= ENDLINE;
@@ -186,11 +187,17 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 	return _stropt_engine(input, charmap, tags, action, args, buf);
 }
 
-char *stropt2str(char **tags, char **args, char sep, char eq) {
+char *stropt2buf(void *buf, size_t size, char **tags, char **args, char sep, char eq) {
 	char *optstr = NULL;
-	size_t optstr_len = 0;
 	char nextsep = 0;
-	FILE *mf = open_memstream(&optstr, &optstr_len);
+	FILE *mf;
+	if (buf == NULL) {
+		size = 0;
+		mf	= open_memstream(&optstr, &size);
+	} else {
+		mf = fmemopen(buf, size, "w+");
+		optstr = buf;
+	}
 	if (mf != NULL) {
 		for (; *tags; tags++, args++) {
 			if (*tags != STROPTX_DELETED_TAG) {
@@ -203,28 +210,31 @@ char *stropt2str(char **tags, char **args, char sep, char eq) {
 				nextsep=sep;
 			}
 		}
+		if (nextsep == '\n')
+			fprintf(mf, "%c", nextsep);
 		fclose(mf);
-	}
-	return optstr;
+		return optstr;
+	} else
+		return NULL;
 }
 
 #if 0
 void parse_args(char *input) {
 	int tagc = stropt(input, NULL, NULL, NULL);
-//	int tagc = stroptx(input, NULL, NULL, STROPTX_KEEP_QUOTATION_MARKS, NULL, NULL, NULL);
-//	int tagc = stroptx(input, NULL, NULL, STROPTX_ALLOW_MULTIPLE_SEP | STROPTX_NEWLINE_TAGS, NULL, NULL, NULL);
+	//	int tagc = stroptx(input, NULL, NULL, STROPTX_KEEP_QUOTATION_MARKS, NULL, NULL, NULL);
+	//	int tagc = stroptx(input, NULL, NULL, STROPTX_ALLOW_MULTIPLE_SEP | STROPTX_NEWLINE_TAGS, NULL, NULL, NULL);
 	if(tagc > 0) {
 		char buf[strlen(input)+1];
 		char *tags[tagc];
 		char *args[tagc];
 		stropt(input, tags, args, buf);
-//	stroptx(input, NULL, NULL, STROPTX_KEEP_QUOTATION_MARKS, tags, args, buf);
-//	stroptx(input, NULL, NULL, STROPTX_ALLOW_MULTIPLE_SEP | STROPTX_NEWLINE_TAGS, tags, args, buf);
+		//	stroptx(input, NULL, NULL, STROPTX_KEEP_QUOTATION_MARKS, tags, args, buf);
+		//	stroptx(input, NULL, NULL, STROPTX_ALLOW_MULTIPLE_SEP | STROPTX_NEWLINE_TAGS, tags, args, buf);
 		printf("%d\n",tagc);
 		for (int i=0; i<tagc; i++) 
 			printf("%s = %s\n",tags[i], args[i]);
 		printf("=======\n");
-//		tags[0] = STROPTX_DELETED_TAG;
+		//		tags[0] = STROPTX_DELETED_TAG;
 		printf("%s\n", stropt2str(tags, args, ',', '='));
 	}
 }
