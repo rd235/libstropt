@@ -89,7 +89,7 @@ static char default_charmap[256] = {
 	['\''] = SQ, ['"'] = DQ, ['\\'] = ESC
 };
 
-static int _stropt_engine(const char *input, char *charmap, char **tags, stropt_table action, char **args, char *buf)
+static int _stropt_engine(const char *input, char *charmap, stropt_table action, char **tags, char **args, char *buf)
 {
 	int state=SEP;
 	int tagc=0;
@@ -97,6 +97,8 @@ static int _stropt_engine(const char *input, char *charmap, char **tags, stropt_
 	for (;state != END;input++) {
 		int this = charmap[*input];
 		//printf("%c %s %s->%s %x\n", *input, sn[this], sn[state], sn[nextstate[state][this]], action[state][this]);
+		/* if tags == NULL, it is a dry-run just to count the tag items.
+			 All the actions modifying buf/tags/args must be skipped */
 		if (tags) {
 			if (action[state][this] & NEWARG) {
 				*buf++=0;
@@ -139,7 +141,7 @@ static int _stropt_engine(const char *input, char *charmap, char **tags, stropt_
 }
 
 int stropt(const char *input, char **tags, char **args, char *buf) {
-	return _stropt_engine(input, default_charmap, tags, default_action, args, buf);
+	return _stropt_engine(input, default_charmap, default_action, tags, args, buf);
 }
 
 int stroptx(const char *input, char *features, char *sep, int flags, char **tags, char **args, char *buf) {
@@ -184,7 +186,7 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 		action[NL][NL] |= ENDLINE;
 		action[ARG][NL] |= ENDLINE;
 	}
-	return _stropt_engine(input, charmap, tags, action, args, buf);
+	return _stropt_engine(input, charmap, action, tags, args, buf);
 }
 
 char *stropt2buf(void *buf, size_t size, char **tags, char **args, char sep, char eq) {

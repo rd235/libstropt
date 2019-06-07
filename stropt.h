@@ -56,7 +56,7 @@ int stropt(const char *input, char **tags, char **args, char *buf);
 	 so features == NULL is the same as features == "#=\n\'\"\\".
 	 For example to disable comment management feature must be set to "=\n\'\"\\".
 
-	 the string argument sep of stroptx is the list of separators of tags (the default value is "\t;,").
+	 the string argument sep of stroptx is the list of separators of tags (the default value is " \t;,").
  */
 
 int stroptx(const char *input, char *features, char *sep, int flags, char **tags, char **args, char *buf);
