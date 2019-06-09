@@ -82,7 +82,7 @@ static const stropt_table default_action = {
 	{CHCOPY, CHCOPY, EOS|ENDARG, CHCOPY,  0,       CHCOPY, CHCOPY, CHCOPY, CHCOPY}, //AESC
 };
 
-static char default_charmap[256] = {
+static const char default_charmap[256] = {
 	[0] = END,
 	[' '] = SEP, ['\t'] = SEP, [';'] = SEP, [','] = SEP,
 	['#'] = COMM, ['='] = ARG, ['\n'] = NL,
@@ -95,6 +95,8 @@ static int _stropt_engine(const char *input, const char *charmap, const stropt_t
 	int state=SEP;
 	int tagc=0;
 	char *thistag=buf;
+	if (args == NULL)
+		args = tags;
 	for (;state != END;input++) {
 		int this = charmap[*input];
 #if 0
@@ -105,6 +107,8 @@ static int _stropt_engine(const char *input, const char *charmap, const stropt_t
 		/* if tags == NULL, it is a dry-run just to count the tag items.
 			 All the actions modifying buf/tags/args must be skipped */
 		if (tags) {
+			if (this == ARG && *args == *tags)
+				this = CHAR;
 			if (action[state][this] & NEWARG) {
 				*buf++=0;
 				*tags=thistag;
@@ -205,12 +209,14 @@ char *stropt2buf(void *buf, size_t size, char **tags, char **args, char sep, cha
 		mf = fmemopen(buf, size, "w+");
 		optstr = buf;
 	}
+	if (args == NULL)
+		args = tags;
 	if (mf != NULL) {
 		for (; *tags; tags++, args++) {
 			if (*tags != STROPTX_DELETED_TAG) {
 				if (nextsep) fprintf(mf, "%c", nextsep);
 				fprintf(mf,"%s",*tags);
-				if (*args) {
+				if (args != tags && *args) {
 					if (eq) fprintf(mf, "%c", eq);
 					fprintf(mf, "%s", *args);
 				}

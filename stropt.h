@@ -43,6 +43,30 @@ void parse_args(char *input) {
 	}
 }
 #endif
+/* when options to parse have no arguments, args can be set to NULL. The examples above become: */
+#if 0
+void parse_args(char *input) {
+	int tagc = stropt(input, NULL, NULL, 0);
+	if(tagc > 0) {
+		char buf[strlen(input)+1];
+		char *tags[tagc];
+		stropt(input, tags, NULL, buf);
+		for (int i=0; i<tagc; i++)
+			printf("%s\n",tags[i]);
+	}
+}
+#endif
+#if 0
+void parse_args(char *input) {
+  int tagc = stropt(input, NULL, NULL, 0);
+  if(tagc > 0) {
+    char *tags[tagc];
+    stropt(input, tags, args, input);
+    for (int i=0; i<tagc; i++)
+      printf("%s\n",tags[i]);
+  }
+}
+#endif
 
 int stropt(const char *input, char **tags, char **args, char *buf);
 
@@ -76,6 +100,8 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 /* rebuild an option string from the tags/args arrays.
 	 tags whose value is STROPTX_DELETED_TAG are skipped in the conversion */
 /* stropt2buf uses a buffer while the output of stropt2str is dynamically allocated */
+/* args == NULL means that options ahveno arguments */
+
 char *stropt2buf(void *buf, size_t size, char **tags, char **args, char sep, char eq);
 
 static inline char *stropt2str(char **tags, char **args, char sep, char eq) {
