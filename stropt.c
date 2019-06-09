@@ -51,7 +51,7 @@
 
 typedef char stropt_table[NSTATES][NINTAGS];
 
-static stropt_table nextstate = {
+static const stropt_table nextstate = {
 	{CHAR, SEP, END, COMM, SEP, ARG,   SQ, DQ, ESC},//CHAR
 	{CHAR, SEP, END, COMM, SEP, CHAR, SQ, DQ, ESC},//SEP
 	{0,   0,    END, 0, 0, 0, 0, 0, 0},//END
@@ -66,7 +66,7 @@ static stropt_table nextstate = {
 	{ARG, ARG,  END, ARG,  ARG, ARG,  ARG,ARG, ARG},//AESC
 };
 
-static stropt_table default_action = {
+static const stropt_table default_action = {
 	// CHAR  SEP     END         COMM     NL       ARG     SQ  DQ ESC
 	{CHCOPY, ENDTAG, EOS|ENDTAG, ENDTAG,  ENDTAG,  NEWARG, 0, 0, 0}, //CHAR
 	{NEWTAG|CHCOPY,0,EOS,        0,       0,       0,      NEWTAG, NEWTAG, NEWTAG}, //SEP
@@ -89,14 +89,19 @@ static char default_charmap[256] = {
 	['\''] = SQ, ['"'] = DQ, ['\\'] = ESC
 };
 
-static int _stropt_engine(const char *input, char *charmap, stropt_table action, char **tags, char **args, char *buf)
+static int _stropt_engine(const char *input, const char *charmap, const stropt_table action,
+		char **tags, char **args, char *buf)
 {
 	int state=SEP;
 	int tagc=0;
 	char *thistag=buf;
 	for (;state != END;input++) {
 		int this = charmap[*input];
-		//printf("%c %s %s->%s %x\n", *input, sn[this], sn[state], sn[nextstate[state][this]], action[state][this]);
+#if 0
+		/* uncomment for debugging */
+		printf("%c %s %s->%s %x\n",
+				*input, sn[this], sn[state], sn[nextstate[state][this]], action[state][this]);
+#endif
 		/* if tags == NULL, it is a dry-run just to count the tag items.
 			 All the actions modifying buf/tags/args must be skipped */
 		if (tags) {
@@ -118,7 +123,7 @@ static int _stropt_engine(const char *input, char *charmap, stropt_table action,
 			}
 			if (action[state][this] & (NEWTAG | NEWARG))
 				thistag=buf;
-			if (action[state][this] & CHCOPY) 
+			if (action[state][this] & CHCOPY)
 				*buf++=*input;
 			if (action[state][this] & ENDLINE) {
 				*tags++="\n";
@@ -129,11 +134,11 @@ static int _stropt_engine(const char *input, char *charmap, stropt_table action,
 				*args=NULL;
 			}
 		}
-		if (action[state][this] & (ENDTAG | ENDARG)) 
+		if (action[state][this] & (ENDTAG | ENDARG))
 			tagc++;
-		if (action[state][this] & ENDLINE) 
+		if (action[state][this] & ENDLINE)
 			tagc++;
-		if (action[state][this] & EOS) 
+		if (action[state][this] & EOS)
 			tagc++;
 		state=nextstate[state][this];
 	}
@@ -154,9 +159,9 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 		features = "#=\n\'\"\\";
 	if (sep == NULL)
 		sep = " \t;,";
-	for (;*features; features++) 
+	for (;*features; features++)
 		charmap[*features] = default_charmap[*features];
-	for (;*sep; sep++) 
+	for (;*sep; sep++)
 		charmap[*sep] = SEP;
 	if (flags & STROPTX_KEEP_QUOTATION_MARKS_IN_TAGS) {
 		action[CHAR][SQ] |= CHCOPY;
