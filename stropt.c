@@ -111,14 +111,14 @@ static int _stropt_engine(const char *input, const char *charmap, const stropt_t
 			}
 			if (action[state][this] & ENDTAG) {
 				*buf++=0;
-				*tags++=thistag;
 				*args++=NULL;
+				*tags++=thistag;
 				thistag=buf;
 			}
 			if (action[state][this] & ENDARG) {
 				*buf++=0;
-				tags++;
 				*args++=thistag;
+				tags++;
 				thistag=buf;
 			}
 			if (action[state][this] & (NEWTAG | NEWARG))
@@ -126,12 +126,12 @@ static int _stropt_engine(const char *input, const char *charmap, const stropt_t
 			if (action[state][this] & CHCOPY)
 				*buf++=*input;
 			if (action[state][this] & ENDLINE) {
-				*tags++="\n";
 				*args++=NULL;
+				*tags++="\n";
 			}
 			if (action[state][this] & EOS) {
-				*tags=NULL;
 				*args=NULL;
+				*tags=NULL;
 			}
 		}
 		if (action[state][this] & (ENDTAG | ENDARG))
