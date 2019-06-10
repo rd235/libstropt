@@ -100,7 +100,7 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 /* rebuild an option string from the tags/args arrays.
 	 tags whose value is STROPTX_DELETED_TAG are skipped in the conversion */
 /* stropt2buf uses a buffer while the output of stropt2str is dynamically allocated */
-/* args == NULL means that options ahveno arguments */
+/* args == NULL means that options have no arguments */
 
 char *stropt2buf(void *buf, size_t size, char **tags, char **args, char sep, char eq);
 
