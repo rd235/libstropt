@@ -28,3 +28,4 @@ install(FILES stropt.h DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/stropt.pc
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
+add_subdirectory(man)

@@ -61,7 +61,7 @@ void parse_args(char *input) {
   int tagc = stropt(input, NULL, NULL, 0);
   if(tagc > 0) {
     char *tags[tagc];
-    stropt(input, tags, args, input);
+    stropt(input, tags, NULL, input);
     for (int i=0; i<tagc; i++)
       printf("%s\n",tags[i]);
   }
