@@ -27,7 +27,7 @@
 
 ## NAME
 
-stropt, stroptx, stropt2buf, stropt2str - Parse options from a string (supports quotation, option arguments)
+stropt, stroptx, stropt2buf, stropt2str - Parse options from a string (it supports quotation, option arguments)
 
 ## SYNOPSIS
 
