@@ -24,7 +24,7 @@ set_target_properties(stropt PROPERTIES VERSION ${PROJECT_VERSION}
 configure_file(stropt.pc.in stropt.pc @ONLY)
 
 install(TARGETS stropt LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES stropt.h DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES stropt.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/stropt.pc
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
