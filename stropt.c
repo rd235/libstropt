@@ -50,6 +50,8 @@
 #define EOS 0x40
 
 typedef char stropt_table[NSTATES][NINTAGS];
+typedef const char stropt_row[NINTAGS];
+typedef stropt_row *const_stropt_table_t;
 
 static const stropt_table nextstate = {
 	{CHAR, SEP, END, COMM, SEP, ARG,   SQ, DQ, ESC},//CHAR
@@ -98,7 +100,7 @@ static int _stropt_engine(const char *input, const char *charmap, const stropt_t
 	if (args == NULL)
 		args = tags;
 	for (;state != END;input++) {
-		int this = charmap[*input];
+		int this = charmap[(int) *input];
 #if 0
 		/* uncomment for debugging */
 		printf("%c %s %s->%s %x\n",
@@ -164,9 +166,9 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 	if (sep == NULL)
 		sep = " \t;,";
 	for (;*features; features++)
-		charmap[*features] = default_charmap[*features];
+		charmap[(int) *features] = default_charmap[(int) *features];
 	for (;*sep; sep++)
-		charmap[*sep] = SEP;
+		charmap[(int) *sep] = SEP;
 	if (flags & STROPTX_KEEP_QUOTATION_MARKS_IN_TAGS) {
 		action[CHAR][SQ] |= CHCOPY;
 		action[CHAR][DQ] |= CHCOPY;
@@ -195,7 +197,7 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 		action[NL][NL] |= ENDLINE;
 		action[ARG][NL] |= ENDLINE;
 	}
-	return _stropt_engine(input, charmap, action, tags, args, buf);
+	return _stropt_engine(input, charmap, (const_stropt_table_t) action, tags, args, buf);
 }
 
 char *stropt2buf(void *buf, size_t size, char **tags, char **args, char sep, char eq) {

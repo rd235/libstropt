@@ -2,10 +2,12 @@ cmake_minimum_required(VERSION 3.12)
 project(stropt
 		VERSION 0.0.1
 		DESCRIPTION "Parse options from a string (it supports quotation, option arguments)"
-		HOMEPAGE_URL "https://github.com/rd235/libstropt")
+		HOMEPAGE_URL "https://github.com/rd235/libstropt"
+		LANGUAGES C)
 
 include(GNUInstallDirs)
 add_definitions(-D_GNU_SOURCE)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 if (PROJECT_INCLUDEDIR)
