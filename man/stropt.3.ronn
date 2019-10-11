@@ -66,7 +66,7 @@ It is possible to protect symbols and spaces using quote, double quote and backs
     This is a more configurable extension of `stropt`. Arguments having the same names as in `stropt` have the same 
     meaning as explained above.
     
-    The string _features_ permits to enable/disable some of the standard features.
+    The string _features_ permits one to enable/disable some of the standard features.
     Each feature corresponds to a mnemonic character, when the character is in the _features_ string the feature is enabled:
     
     `'`: single quoting, 
