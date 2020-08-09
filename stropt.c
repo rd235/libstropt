@@ -24,7 +24,10 @@
 #include <unistd.h>
 #include <stropt.h>
 
-//static char *sn[] = {"CHAR", "SEP", "END", "COMM", "NL", "ARG", "SQ", "DQ", "ESC", "ASQ", "ADQ", "AESC",};
+#ifdef DEBUGFSA
+static char *sn[] = {"CHAR", "SEP", "END", "COMM", "NL", "ARG", "SQ", "DQ", "ESC", "ASQ", "ADQ", "AESC",};
+#endif
+
 #define CHAR 0
 #define SEP 1
 #define END 2
@@ -101,7 +104,7 @@ static int _stropt_engine(const char *input, const char *charmap, const stropt_t
 		args = tags;
 	for (;state != END;input++) {
 		int this = charmap[(int) *input];
-#if 0
+#ifdef DEBUGFSA
 		/* uncomment for debugging */
 		printf("%c %s %s->%s %x\n",
 				*input, sn[this], sn[state], sn[nextstate[state][this]], action[state][this]);
@@ -109,7 +112,9 @@ static int _stropt_engine(const char *input, const char *charmap, const stropt_t
 		/* if tags == NULL, it is a dry-run just to count the tag items.
 			 All the actions modifying buf/tags/args must be skipped */
 		if (tags) {
-			if (this == ARG && *args == *tags)
+			/* if no args required change ARG into CAHR
+				 (i.e. ignore '=') */
+			if (this == ARG && args == tags)
 				this = CHAR;
 			if (action[state][this] & NEWARG) {
 				*buf++=0;
