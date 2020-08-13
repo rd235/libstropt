@@ -20,9 +20,9 @@
 .\" Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 .\" MA 02110-1301 USA.
 .\"
-.\" generated with Ronn-NG/v0.8.0
-.\" http://github.com/apjanke/ronn-ng/tree/0.8.0
-.TH "STROPT" "3" "October 2019" "VirtualSquare"
+.\" generated with Ronn-NG/v0.10.0
+.\" http://github.com/apjanke/ronn-ng/tree/0.10.0-SNAPSHOT
+.TH "STROPT" "3" "August 2020" "VirtualSquare"
 .SH "NAME"
 stropt, stroptx, stropt2buf, stropt2str \- Parse options from a string (it supports quotation, option arguments)
 .SH "SYNOPSIS"
@@ -36,10 +36,10 @@ stropt, stroptx, stropt2buf, stropt2str \- Parse options from a string (it suppo
 .P
 \fBchar *stropt2str(char **\fR\fItags\fR\fB, char **\fR\fIargs\fR\fB, char\fR \fIsep\fR\fB, char\fR \fIeq\fR\fB);\fR
 .SH "DESCRIPTION"
-This small library parses a list of options from a string\. Options can be separated by spaces, commas, semicolons, tabs or new line\. (e\.g\. \fIuppercase,bold,underlined\fR )\. Options may have arguments (e\.g\. \fIro,noatime,uid=0,gid=0\fR )\. It is possible to protect symbols and spaces using quote, double quote and backslash (e\.g\. \fIvalues=\'1,2,3,4\',equal==\fR )
+This small library parses a list of options from a string\. Options can be separated by spaces, commas, semicolons, tabs or new line\. (e\.g\. \fIuppercase,bold,underlined\fR )\. Options may have arguments (e\.g\. \fIro,noatime,uid=0,gid=0\fR )\. It is possible to protect symbols and spaces using quote, double quote and backslash (e\.g\. \fIvalues='1,2,3,4',equal==\fR )
 .TP
 \fBstropt\fR
-This function parses a list of options from the string \fIinput\fR\. Options can be separated by commas, semicolons, tabs oe new lines\. Options may have arguments in the form \fIkeyword=value\fR\. \fIbuf\fR is a temporary buffer, it must have the same size of the \fIinput\fR string (including the NULL terminator)\. \fItags\fR and \fIargs\fR are the resulting arrays of options and arguments respectively\. Both \fItags\fR and \fIargs\fR have one NULL terminator element at the end\. When an option has not an argument the corresponding \fIargs\fR element is NULL\. For example if \fIinput\fR is "font=12,typeface=bodoni,italic", \fItags[0]\fR="font", \fItags[1]\fR="typeface", \fItags[0]\fR="italic", \fItags[4]\fR=NULL, \fIargs[0]\fR="12", \fIargs[1]\fR="bodoni", \fIargs[0]\fR=NULL, \fIargs[4]\fR=NULL\.
+This function parses a list of options from the string \fIinput\fR\. Options can be separated by commas, semicolons, tabs oe new lines\. Options may have arguments in the form \fIkeyword=value\fR\. \fIbuf\fR is a temporary buffer, it must have the same size of the \fIinput\fR string (including the NULL terminator)\. \fItags\fR and \fIargs\fR are the resulting arrays of options and arguments respectively\. Both \fItags\fR and \fIargs\fR have one NULL terminator element at the end\. When an option has not an argument the corresponding \fIargs\fR element is NULL\. For example if \fIinput\fR is "font=12,typeface=bodoni,italic", \fItags[0]\fR="font", \fItags[1]\fR="typeface", \fItags[2]\fR="italic", \fItags[4]\fR=NULL, \fIargs[0]\fR="12", \fIargs[1]\fR="bodoni", \fIargs[0]\fR=NULL, \fIargs[4]\fR=NULL\.
 .IP
 When \fBstropt\fR is called with \fItags\fR, \fIargs\fR, and \fIbuf\fR all NULL, it parses the input, counting the options\. The return value can be used to allocate suitable arrays for \fItags\fR and \fIargs\fR\.
 .IP
@@ -50,7 +50,7 @@ This is a more configurable extension of \fBstropt\fR\. Arguments having the sam
 .IP
 The string \fIfeatures\fR permits one to enable/disable some of the standard features\. Each feature corresponds to a mnemonic character, when the character is in the \fIfeatures\fR string the feature is enabled:
 .IP
-\fB\'\fR: single quoting,
+\fB'\fR: single quoting,
 .IP
 \fB"\fR: double quoting,
 .IP
@@ -86,9 +86,9 @@ Elements whose option tag (element of \fItags\fR) value is \fBSTROPTX_DELETED_TA
 \fBstropt2str\fR
 This is the sibling function of \fBstropt2buf\fR\. It uses dynamically allocated memory instead of a buffer provided by the caller\. The resulting string must be deallocated using free(3)\.
 .SH "RETURN VALUE"
-.IP "\[ci]" 4
+.IP "\(bu" 4
 \fBstropt\fR and \fBstroptx\fR return the number of options + 1\.
-.IP "\[ci]" 4
+.IP "\(bu" 4
 \fBstropt2buf\fR and \fBstropt2str\fR return the resulting string\.
 .IP "" 0
 .SH "EXAMPLES"
@@ -96,7 +96,7 @@ The following function lists the option tags and arguments (without modyfying th
 .IP "" 4
 .nf
 void parse_args(char *input) {
-  int tagc = stropt(input, NULL, NULL, 0);
+  int tagc = stropt(input, NULL, NULL, NULL);
   if(tagc > 0) {
     char buf[strlen(input)+1];
     char *tags[tagc];
@@ -113,7 +113,7 @@ it is possible to use the same input string as the buffer for parsing (the value
 .IP "" 4
 .nf
 void parse_args(char *input) {
-  int tagc = stropt(input, NULL, NULL, 0);
+  int tagc = stropt(input, NULL, NULL, NULL);
   if(tagc > 0) {
     char *tags[tagc];
     char *args[tagc];
@@ -129,13 +129,13 @@ when options to parse have no arguments, args can be set to NULL\.
 .IP "" 4
 .nf
 void parse_args(char *input) {
-  int tagc = stropt(input, NULL, NULL, 0);
+  int tagc = stropt(input, NULL, NULL, NULL);
   if(tagc > 0) {
     char buf[strlen(input)+1];
     char *tags[tagc];
     stropt(input, tags, NULL, buf);
     for (int i=0; i<tagc; i++)
-      printf("%s\en",tags[i]);
+      printf("%s \en",tags[i]);
   }
 }
 .fi
@@ -151,7 +151,7 @@ The following complete program parses and re\-encode a string of comma separated
 #include <stropt\.h>
 
 char *delete_uppercase_options(const char *input) {
-  int tagc = stroptx(input, "", ",",STROPTX_ALLOW_MULTIPLE_SEP, NULL, NULL, 0);
+  int tagc = stroptx(input, "", ",",STROPTX_ALLOW_MULTIPLE_SEP, NULL, NULL, NULL);
   if(tagc > 0) {
     char buf[strlen(input)+1];
     char *tags[tagc];
@@ -160,7 +160,7 @@ char *delete_uppercase_options(const char *input) {
     for (i = 0; i < tagc; i++)
       if (tags[i] && isupper(tags[i][0]))
         tags[i] = STROPTX_DELETED_TAG;
-    return stropt2str(tags, NULL, \',\', \'=\');
+    return stropt2str(tags, NULL, ',', '=');
   } else
     return NULL;
 }

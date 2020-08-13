@@ -54,7 +54,7 @@ It is possible to protect symbols and spaces using quote, double quote and backs
     of the _input_ string (including the NULL terminator). _tags_ and _args_ are the resulting 
     arrays of options and arguments respectively. Both _tags_ and _args_ have one NULL terminator element at the end.
     When an option has not an argument the corresponding _args_ element is NULL.
-    For example if _input_ is "font=12,typeface=bodoni,italic", _tags[0]_="font", _tags[1]_="typeface", _tags[0]_="italic", 
+    For example if _input_ is "font=12,typeface=bodoni,italic", _tags[0]_="font", _tags[1]_="typeface", _tags[2]_="italic", 
     _tags[4]_=NULL, _args[0]_="12", _args[1]_="bodoni", _args[0]_=NULL, _args[4]_=NULL.
 
     When `stropt` is called with _tags_, _args_, and _buf_ all NULL, it parses the input, counting the options.
@@ -123,7 +123,7 @@ The following function lists the option tags and arguments (without modyfying th
 
 ```
 void parse_args(char *input) {
-  int tagc = stropt(input, NULL, NULL, 0);
+  int tagc = stropt(input, NULL, NULL, NULL);
   if(tagc > 0) {
     char buf[strlen(input)+1];
     char *tags[tagc];
@@ -140,7 +140,7 @@ it is possible to use the same input string as the buffer for parsing
 
 ```
 void parse_args(char *input) {
-  int tagc = stropt(input, NULL, NULL, 0);
+  int tagc = stropt(input, NULL, NULL, NULL);
   if(tagc > 0) {
     char *tags[tagc];
     char *args[tagc];
@@ -155,13 +155,13 @@ when options to parse have no arguments, args can be set to NULL.
 
 ```
 void parse_args(char *input) {
-  int tagc = stropt(input, NULL, NULL, 0);
+  int tagc = stropt(input, NULL, NULL, NULL);
   if(tagc > 0) {
     char buf[strlen(input)+1];
     char *tags[tagc];
     stropt(input, tags, NULL, buf);
     for (int i=0; i<tagc; i++)
-      printf("%s\n",tags[i]);
+      printf("%s \n",tags[i]);
   }
 }
 ```
@@ -177,7 +177,7 @@ by an uppercase letter.
 #include <stropt.h>
 
 char *delete_uppercase_options(const char *input) {
-  int tagc = stroptx(input, "", ",",STROPTX_ALLOW_MULTIPLE_SEP, NULL, NULL, 0);
+  int tagc = stroptx(input, "", ",",STROPTX_ALLOW_MULTIPLE_SEP, NULL, NULL, NULL);
   if(tagc > 0) {
     char buf[strlen(input)+1];
     char *tags[tagc];
