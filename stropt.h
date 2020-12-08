@@ -1,6 +1,8 @@
 #ifndef STROPT_H
 #define STROPT_H
 
+#include <stddef.h>
+
 /* stropt parses a list of options from a string.
 	 options can be separated by spaces, commas, semicolons, tabs or new line.
 	 e.g. "uppercase,bold,underlined"
