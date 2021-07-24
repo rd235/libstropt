@@ -46,7 +46,7 @@ char **`_tags_`, char **`_args_`, char *`_buf_`);`
 
 This small library parses a list of options from a string. Options can be separated by spaces, commas, semicolons, tabs or new line.
 (e.g. _uppercase,bold,underlined_ ).  Options may have arguments (e.g. _ro,noatime,uid=0,gid=0_ ). 
-It is possible to protect symbols and spaces using quote, double quote and backslash (e.g. _values='1,2,3,4',equal==_ )
+It is possible to protect symbols and spaces using quote, double quote and backslash (e.g. _values='1,2,3,4',equal=\\=_ )
 
   * `stropt`:
     This function parses a list of options from the string _input_. Options can be separated by commas, semicolons, tabs oe
