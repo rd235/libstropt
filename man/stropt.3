@@ -22,7 +22,7 @@
 .\"
 .\" generated with Ronn-NG/v0.10.0
 .\" http://github.com/apjanke/ronn-ng/tree/0.10.0-SNAPSHOT
-.TH "STROPT" "3" "August 2020" "VirtualSquare"
+.TH "STROPT" "3" "July 2021" "VirtualSquare"
 .SH "NAME"
 stropt, stroptx, stropt2buf, stropt2str \- Parse options from a string (it supports quotation, option arguments)
 .SH "SYNOPSIS"
@@ -39,9 +39,9 @@ stropt, stroptx, stropt2buf, stropt2str \- Parse options from a string (it suppo
 This small library parses a list of options from a string\. Options can be separated by spaces, commas, semicolons, tabs or new line\. (e\.g\. \fIuppercase,bold,underlined\fR )\. Options may have arguments (e\.g\. \fIro,noatime,uid=0,gid=0\fR )\. It is possible to protect symbols and spaces using quote, double quote and backslash (e\.g\. \fIvalues='1,2,3,4',equal==\fR )
 .TP
 \fBstropt\fR
-This function parses a list of options from the string \fIinput\fR\. Options can be separated by commas, semicolons, tabs oe new lines\. Options may have arguments in the form \fIkeyword=value\fR\. \fIbuf\fR is a temporary buffer, it must have the same size of the \fIinput\fR string (including the NULL terminator)\. \fItags\fR and \fIargs\fR are the resulting arrays of options and arguments respectively\. Both \fItags\fR and \fIargs\fR have one NULL terminator element at the end\. When an option has not an argument the corresponding \fIargs\fR element is NULL\. For example if \fIinput\fR is "font=12,typeface=bodoni,italic", \fItags[0]\fR="font", \fItags[1]\fR="typeface", \fItags[2]\fR="italic", \fItags[4]\fR=NULL, \fIargs[0]\fR="12", \fIargs[1]\fR="bodoni", \fIargs[0]\fR=NULL, \fIargs[4]\fR=NULL\.
+This function parses a list of options from the string \fIinput\fR\. Options can be separated by commas, semicolons, tabs oe new lines\. Options may have arguments in the form \fIkeyword=value\fR\. \fIbuf\fR is a temporary buffer, it must have the same size of the \fIinput\fR string (including the NULL terminator)\. \fItags\fR and \fIargs\fR are the resulting arrays of options and arguments respectively\. Both \fItags\fR and \fIargs\fR have one NULL terminator element at the end\. When an option has not an argument the corresponding \fIargs\fR element is NULL\. For example if \fIinput\fR is "font=12,typeface=bodoni,italic", \fItags[0]\fR="font", \fItags[1]\fR="typeface", \fItags[2]\fR="italic", \fItags[3]\fR=NULL, \fIargs[0]\fR="12", \fIargs[1]\fR="bodoni", \fIargs[2]\fR=NULL, \fIargs[3]\fR=NULL\.
 .IP
-When \fBstropt\fR is called with \fItags\fR, \fIargs\fR, and \fIbuf\fR all NULL, it parses the input, counting the options\. The return value can be used to allocate suitable arrays for \fItags\fR and \fIargs\fR\.
+When \fBstropt\fR is called with \fItags\fR, \fIargs\fR, and \fIbuf\fR set to \fBNULL\fR, it parses the input, counting the options\. The return value can be used to allocate suitable arrays for \fItags\fR and \fIargs\fR\.
 .IP
 It is possible to use the same variable as \fIinput\fR and \fIbuffer\fR\. In this case the original value of \fIinput\fR is overwritten\.
 .TP

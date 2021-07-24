@@ -55,9 +55,9 @@ It is possible to protect symbols and spaces using quote, double quote and backs
     arrays of options and arguments respectively. Both _tags_ and _args_ have one NULL terminator element at the end.
     When an option has not an argument the corresponding _args_ element is NULL.
     For example if _input_ is "font=12,typeface=bodoni,italic", _tags[0]_="font", _tags[1]_="typeface", _tags[2]_="italic", 
-    _tags[4]_=NULL, _args[0]_="12", _args[1]_="bodoni", _args[0]_=NULL, _args[4]_=NULL.
+    _tags[3]_=NULL, _args[0]_="12", _args[1]_="bodoni", _args[2]_=NULL, _args[3]_=NULL.
 
-    When `stropt` is called with _tags_, _args_, and _buf_ all NULL, it parses the input, counting the options.
+    When `stropt` is called with _tags_, _args_, and _buf_ set to `NULL`, it parses the input, counting the options.
     The return value can be used to allocate suitable arrays for _tags_ and _args_.
 
     It is possible to use the same variable as _input_ and _buffer_. In this case the original value of _input_ is overwritten.
