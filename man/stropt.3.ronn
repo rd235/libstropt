@@ -49,7 +49,7 @@ This small library parses a list of options from a string. Options can be separa
 It is possible to protect symbols and spaces using quote, double quote and backslash (e.g. _values='1,2,3,4',equal=\\=_ )
 
   * `stropt`:
-    This function parses a list of options from the string _input_. Options can be separated by commas, semicolons, tabs oe
+    This function parses a list of options from the string _input_. Options can be separated by commas, semicolons, tabs or
     new lines. Options may have arguments in the form _keyword=value_. _buf_ is a temporary buffer, it must have the same size
     of the _input_ string (including the NULL terminator). _tags_ and _args_ are the resulting 
     arrays of options and arguments respectively. Both _tags_ and _args_ have one NULL terminator element at the end.

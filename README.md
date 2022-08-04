@@ -88,7 +88,7 @@ int stroptx(const char *input, char *features, char *sep, int flags, char **tags
 
 stroptx is a more flexible and extended interface to stropt:
 stropt supports several features:
-single quoting ('), double quoting ("), character escape (\), input on several lines (\n), arguments (=)
+single quoting ('), double quoting ("), character escape (\\), input on several lines (\n), arguments (=)
 comment("#")
 
 the string argument named "features" of stroptx allows to enable/disable some of the standard features.
@@ -101,7 +101,7 @@ the string argument sep of stroptx is the list of separators of tags (the defaul
 Flags:
 * ```STROPTX_KEEP_QUOTATION_MARKS_IN_TAGS STROPTX_KEEP_QUOTATION_MARKS_IN_ARGS STROPTX_KEEP_QUOTATION_MARKS```
 usually strops provides the output values without quotation marks (' " \).
-when the followings flags are set the quotation marks are preserved in tags, args or both
+when the following flags are set the quotation marks are preserved in tags, args or both
 * ```STROPTX_ALLOW_MULTIPLE_SEP```
 when STROPTX_ALLOW_MULTIPLE_SEP is not set multiple separators one after the other appear as one,
 viceversa when it is set each sequence of two separators means an empty field in between
